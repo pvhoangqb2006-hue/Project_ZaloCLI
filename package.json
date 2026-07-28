@@ -1,0 +1,64 @@
+{
+  "name": "zalo_agent",
+  "version": "1.8.5",
+  "description": "CLI tool for Zalo automation — multi-account, proxy, bank transfers, QR payments, Official Account API v3.0",
+  "type": "module",
+  "bin": {
+    "zalo-agent": "src/index.js"
+  },
+  "main": "./src/index.js",
+  "files": [
+    "src/",
+    "LICENSE",
+    "DISCLAIMER.md"
+  ],
+  "scripts": {
+    "start": "node src/index.js chatbot start",
+    "cli": "node src/index.js",
+    "test": "node --test",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "format": "prettier --write src/",
+    "format:check": "prettier --check src/",
+    "release": "npm version patch -m 'release: v%s' && git push origin main --tags",
+    "prepublishOnly": "npm run lint && npm test"
+  },
+  "keywords": [
+    "zalo",
+    "cli",
+    "automation",
+    "messaging",
+    "vietnam",
+    "proxy",
+    "vietqr",
+    "zca-js",
+    "official-account",
+    "zalo-oa",
+    "webhook"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/therealtimex/zalo-cli"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "better-sqlite3": "^12.10.0",
+    "chalk": "^5.3.0",
+    "commander": "^14.0.3",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "https-proxy-agent": "^8.0.0",
+    "node-fetch": "^3.3.0",
+    "undici": "^6.27.0",
+    "zca-js": "^2.1.2",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.4",
+    "prettier": "^3.8.1"
+  }
+}
