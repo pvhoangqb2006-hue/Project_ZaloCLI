@@ -1,9 +1,12 @@
 /**
  * Profile commands — view and update the logged-in account's profile.
  *
- * WEEK 1: stubbed, same pattern as msg.js. WEEK 2: wire to real API.
+ * WEEK 2: both subcommands now make real (one-shot) calls through
+ * core/zalo-client.js — currently the mock, swapped for Dev 1's real
+ * version once it lands.
  */
 
+import { getApi, autoLogin } from "../core/zalo-client-facade.js";
 import { output, success, error } from "../utils/output.js";
 
 export function registerProfileCommands(program) {
@@ -11,12 +14,15 @@ export function registerProfileCommands(program) {
 
     profile
         .command("get")
-        .description("Show the current account's profile (stub)")
+        .description("Show the current account's profile")
         .action(async () => {
             try {
-                // --- STUB: replace with `await getApi().getProfile()` in Week 2 ---
-                const result = { name: "(stub)", status: "not connected yet" };
-                output(result, program.opts().json, () => success("Profile fetched (stub)"));
+                await autoLogin();
+                const api = getApi();
+                const result = await api.getProfile();
+                output(result, program.opts().json, () =>
+                    success(`Profile: ${result.name} (${result.id})`)
+                );
             } catch (e) {
                 error(`Get profile failed: ${e.message}`);
             }
@@ -24,12 +30,14 @@ export function registerProfileCommands(program) {
 
     profile
         .command("update <json>")
-        .description('Update profile fields (stub). JSON payload, e.g. \'{"name":"..."}\'')
+        .description('Update profile fields. JSON payload, e.g. \'{"name":"..."}\'')
         .action(async (json) => {
             try {
                 const payload = JSON.parse(json);
-                // --- STUB: replace with `await getApi().updateProfile(payload)` in Week 2 ---
-                output(payload, program.opts().json, () => success("Profile updated (stub)"));
+                await autoLogin();
+                const api = getApi();
+                const result = await api.updateProfile(payload);
+                output(result, program.opts().json, () => success("Profile updated"));
             } catch (e) {
                 if (e instanceof SyntaxError) {
                     error(`Invalid JSON: ${e.message}`);

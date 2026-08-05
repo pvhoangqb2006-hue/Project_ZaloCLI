@@ -1,11 +1,13 @@
 /**
  * Message commands — send and list messages.
  *
- * WEEK 1: stubbed. Actions just log what they'd do and return fake data.
- * WEEK 2: replace the STUB blocks with real calls once Dev 1 exposes
- * something like getApi() from core/zalo-client.js.
+ * WEEK 2: `send` now makes a real (one-shot) call through core/zalo-client.js
+ * — currently the mock, swapped for Dev 1's real version once it lands.
+ * `list` stays stubbed since it depends on Dev 1's DB read functions,
+ * expected later once sync/storage work is in place.
  */
 
+import { getApi, autoLogin } from "../core/zalo-client-facade.js";
 import { output, success, error } from "../utils/output.js";
 
 export function registerMsgCommands(program) {
@@ -13,12 +15,15 @@ export function registerMsgCommands(program) {
 
     msg.command("send <threadId> <text>")
         .description("Send a text message to a thread")
-        .action(async (threadId, text) => {
+        .option("-g, --group", "Send to a group thread instead of a direct user")
+        .action(async (threadId, text, opts) => {
             try {
-                // --- STUB: replace with `await getApi().sendMessage(...)` in Week 2 ---
-                const result = { threadId, text, status: "queued (stub)" };
+                await autoLogin();
+                const api = getApi();
+                const threadType = opts.group ? "group" : "user";
+                const result = await api.sendMessage(threadId, text, threadType);
                 output(result, program.opts().json, () =>
-                    success(`Would send "${text}" to ${threadId}`)
+                    success(`Sent to ${threadId} (id: ${result.messageId})`)
                 );
             } catch (e) {
                 error(`Send message failed: ${e.message}`);
@@ -26,11 +31,11 @@ export function registerMsgCommands(program) {
         });
 
     msg.command("list")
-        .description("List recent messages (stub)")
+        .description("List recent messages (stub — needs Dev 1's DB read functions)")
         .option("-n, --limit <n>", "Number of messages to show", "10")
         .action(async (opts) => {
             try {
-                // --- STUB: replace with a real fetch/DB read in Week 2/3 ---
+                // --- STILL STUB: replace once Dev 1 exposes e.g. getMessages(threadId, limit) ---
                 const result = { messages: [], limit: Number(opts.limit) };
                 output(result, program.opts().json, () =>
                     success(`No messages yet (stub) — limit=${opts.limit}`)
