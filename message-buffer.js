@@ -1,17 +1,3 @@
-// src/mcp/message-buffer.js
-//
-// Tuần 2 - Nhiệm vụ Dev 3: "Xây dựng logic MessageBuffer lưu trữ trên RAM"
-//
-// MessageBuffer là một "hộp thư tạm" sống trong RAM (không lưu ổ đĩa).
-// Vì sao cần nó? AI Agent gọi MCP tool theo kiểu hỏi-đáp (request/response),
-// nhưng Zalo gửi tin nhắn qua WebSocket liên tục, không đồng bộ với nhịp
-// hỏi của AI. MessageBuffer đứng giữa 2 bên: nhận tin đến bất cứ lúc nào
-// (push), rồi cho AI lấy ra khi nó rảnh (read), không bị rớt tin nhắn nào.
-//
-// Cơ chế phân trang dùng "cursor" dạng số thứ tự tăng dần (seq), KHÔNG
-// dùng timestamp - vì 2 tin nhắn có thể đến cùng 1 mili-giây, dễ gây trùng
-// hoặc sót khi phân trang bằng thời gian.
-
 export class MessageBuffer {
   constructor({ maxMessagesPerThread = 500 } = {}) {
     // threadId -> mảng tin nhắn đã lưu, sắp theo thứ tự đến
