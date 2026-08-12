@@ -1,7 +1,3 @@
-// src/mcp/tools/get-messages.tool.js
-//
-// Tuần 2: đã nối thật với MessageBuffer (không còn trả dữ liệu giả như tuần 1).
-
 import { getMessagesInputSchema } from "../schemas/tools.schema.js";
 import { messageBuffer } from "../message-buffer.js";
 
