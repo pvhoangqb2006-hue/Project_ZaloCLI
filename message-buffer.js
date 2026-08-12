@@ -8,15 +8,6 @@ export class MessageBuffer {
     this._maxMessagesPerThread = maxMessagesPerThread;
   }
 
-  /**
-   * Thêm 1 tin nhắn mới vào buffer.
-   * Đây là hàm mà nguồn phát tin nhắn (Zalo listener thật ở tuần 3,
-   * hoặc tool giả lập ở tuần 2) sẽ gọi.
-   *
-   * @param {string} threadId - id của cuộc trò chuyện
-   * @param {object} message - nội dung tin nhắn thô, ví dụ { fromId, text, type }
-   * @returns {object} tin nhắn đã lưu, kèm seq + threadId + receivedAt
-   */
   push(threadId, message) {
     if (!threadId) throw new Error("MessageBuffer.push: thiếu threadId");
 
