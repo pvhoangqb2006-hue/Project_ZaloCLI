@@ -1,16 +1,3 @@
-// src/mcp/tools/dev-seed-message.tool.js
-//
-// ⚠️ TOOL TẠM THỜI - CHỈ DÙNG ĐỂ DEV/TEST TUẦN 2 ⚠️
-//
-// Vì Dev 4 chưa xong luồng `daemon listen` thật (dự kiến tuần 3), tool này
-// giả lập việc "có 1 tin nhắn mới vừa đến" bằng cách gọi thẳng
-// messageBuffer.push(...) - y hệt cách mà listener thật sau này sẽ gọi
-// qua wireMessageBuffer() trong message-buffer.js.
-//
-// KHI TUẦN 3 XONG: xóa tool này khỏi index.js (và xóa luôn file này),
-// vì lúc đó tin nhắn sẽ tự động chảy vào buffer từ Zalo thật, không cần
-// giả lập bằng tay nữa.
-
 import { z } from "zod";
 import { messageBuffer } from "../message-buffer.js";
 
