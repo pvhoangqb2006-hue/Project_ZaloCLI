@@ -1,8 +1,3 @@
-#!/usr/bin/env node
-// src/mcp/index.js
-//
-// Tuần 2: thêm tool dev_seed_message (tạm thời) để test MessageBuffer.
-
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
