@@ -33,15 +33,6 @@ export class MessageBuffer {
     return stored;
   }
 
-  /**
-   * Đọc tin nhắn của 1 thread, có phân trang bằng cursor.
-   *
-   * @param {object} params
-   * @param {string} params.threadId
-   * @param {number} [params.limit=20]
-   * @param {string} [params.cursor] - seq của tin nhắn cuối cùng đã đọc lần trước
-   * @returns {{ messages: object[], nextCursor: string|null, hasMore: boolean }}
-   */
   read({ threadId, limit = 20, cursor }) {
     const list = this._threads.get(threadId) || [];
     const afterSeq = cursor ? Number(cursor) : 0;
@@ -67,33 +58,10 @@ export class MessageBuffer {
   }
 }
 
-// -----------------------------------------------------------------------
-// SINGLETON: toàn bộ MCP server dùng chung 1 instance duy nhất của
-// MessageBuffer. Mọi tool (get_messages, dev-seed...) và sau này là
-// listener thật của Dev 4 đều import CHÍNH instance này, để đảm bảo
-// dữ liệu nhất quán trong suốt vòng đời của tiến trình server.
-// -----------------------------------------------------------------------
 export const messageBuffer = new MessageBuffer();
 
-/**
- * ĐIỂM NỐI cho tuần 3: khi Dev 4 hoàn thành luồng `daemon listen`
- * (thường là 1 EventEmitter phát sự kiện "message" mỗi khi Zalo có
- * tin nhắn mới), chỉ cần gọi:
- *
- *   import { wireMessageBuffer, messageBuffer } from "./message-buffer.js";
- *   wireMessageBuffer(zaloListenerEmitter, messageBuffer);
- *
- * và MessageBuffer sẽ tự động nhận tin thật, không cần sửa gì trong
- * message-buffer.js hay các tool đang dùng nó.
- *
- * @param {import("events").EventEmitter} zaloEventEmitter - emitter phát event "message"
- * @param {MessageBuffer} buffer - instance MessageBuffer muốn nối vào (mặc định dùng singleton)
- */
 export function wireMessageBuffer(zaloEventEmitter, buffer = messageBuffer) {
   zaloEventEmitter.on("message", (msg) => {
-    // Kỳ vọng msg thật từ Dev 4 có dạng tối thiểu { threadId, ...nộidung }.
-    // Nếu format thực tế khác, chỉ cần sửa DUY NHẤT dòng map bên dưới,
-    // không cần đụng vào logic MessageBuffer hay các tool MCP.
     const { threadId, ...rest } = msg;
     buffer.push(threadId, rest);
   });
