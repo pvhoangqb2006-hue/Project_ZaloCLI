@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+// src/mcp/index.js
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
@@ -8,11 +10,9 @@ import { devSeedMessageTool } from "./tools/dev-seed-message.tool.js";
 function createServer() {
   const server = new McpServer({
     name: "zalo-agent-mcp",
-    version: "0.2.0",
+    version: "0.3.0",
   });
 
-  // TODO (sau tuần 3): bỏ devSeedMessageTool khỏi danh sách này khi
-  // luồng daemon listen thật của Dev 4 đã nối qua wireMessageBuffer().
   for (const tool of [getMessagesTool, sendMessageTool, devSeedMessageTool]) {
     server.registerTool(
       tool.name,
